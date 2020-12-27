@@ -1,21 +1,39 @@
-import './styles.css';
-import countryTemplate from '../templates/country-card.hbs';
-import API from './api-service';
-import getRefs from './get-refs';
+import countryTemplate from './templates/country-template.hbs';
+import countriesTemplate from './templates/countries-template.hbs';
+import API from './js/api-service';
+import getRefs from './js/get-refs';
+// import debounce from 'lodash.debounce';
 
 const refs = getRefs();
 
 refs.searchInput.addEventListener('input', onSearch);
 
 function onSearch(e) {
-    e.preventDefault();
-    const input = e.currentTarget;
-    const searchQuery = input.elements.query.value;
-    console.log(searchQuery);
-    API.fetchCountry(searchQuery)
-        .then(renderCountryTemplate)
-        .catch(onFetchError)
-        .finally(() => input.reset())
+  e.preventDefault();
+
+  const input = e.currentTarget;
+  const searchQuery = input.value;
+
+  API.fetchCountry(searchQuery)
+    .then(onFetchSuccess)
+    .catch(onFetchError)
+    .finally(clearMarkup())
+}
+
+function onFetchSuccess(data) {
+  if (data.length === 1) {
+    renderCountryTemplate(data);
+    return;
+  }
+
+  if (data.length > 1 && data.length <= 10) {
+    renderCountriesTemplate(data);
+    return;
+  }
+  
+  onFetchError();   
+  clearMarkup();
+  return;
 }
 
 function renderCountryTemplate(country) {
@@ -23,6 +41,13 @@ function renderCountryTemplate(country) {
     refs.countryContainer.innerHTML = markup;
 }
 
-function onFetchError(error) {
-  alert("Oops, we can't find your country!");
+function renderCountriesTemplate(countries) {
+    const markup = countriesTemplate(countries);
+    refs.countryContainer.innerHTML = markup;
 }
+
+function onFetchError() {
+console.log("Too many countries found!");
+}
+
+function clearMarkup() {refs.countryContainer.innerHTML = '';}
