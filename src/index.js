@@ -2,16 +2,16 @@ import countryTemplate from './templates/country-template.hbs';
 import countriesTemplate from './templates/countries-template.hbs';
 import API from './js/api-service';
 import getRefs from './js/get-refs';
-// import debounce from 'lodash.debounce';
+const debounce = require('lodash.debounce');
 
 const refs = getRefs();
 
-refs.searchInput.addEventListener('input', onSearch);
+refs.searchInput.addEventListener('input', debounce(onSearch, 500));
 
 function onSearch(e) {
   e.preventDefault();
 
-  const input = e.currentTarget;
+  const input = e.target;
   const searchQuery = input.value;
 
   API.fetchCountry(searchQuery)
