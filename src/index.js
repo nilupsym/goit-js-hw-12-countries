@@ -2,6 +2,7 @@ import countryTemplate from './templates/country-template.hbs';
 import countriesTemplate from './templates/countries-template.hbs';
 import API from './js/api-service';
 import getRefs from './js/get-refs';
+
 const debounce = require('lodash.debounce');
 
 const refs = getRefs();
@@ -47,7 +48,7 @@ function renderCountriesTemplate(countries) {
 }
 
 function onFetchError() {
-console.log("Too many countries found!");
+alert("Please, enter a more specific query!");
 }
 
 function clearMarkup() {refs.countryContainer.innerHTML = '';}
