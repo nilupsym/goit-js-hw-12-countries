@@ -1,3 +1,5 @@
+import './styles.css';
+import { onFetchError, onFetchHurray } from './js/notification';
 import countryTemplate from './templates/country-template.hbs';
 import countriesTemplate from './templates/countries-template.hbs';
 import API from './js/api-service';
@@ -24,6 +26,7 @@ function onSearch(e) {
 function onFetchSuccess(data) {
   if (data.length === 1) {
     renderCountryTemplate(data);
+    onFetchHurray();
     return;
   }
 
@@ -45,10 +48,6 @@ function renderCountryTemplate(country) {
 function renderCountriesTemplate(countries) {
     const markup = countriesTemplate(countries);
     refs.countryContainer.innerHTML = markup;
-}
-
-function onFetchError() {
-alert("Please, enter a more specific query!");
 }
 
 function clearMarkup() {refs.countryContainer.innerHTML = '';}
